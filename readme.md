@@ -2,6 +2,8 @@
 
 python api for https://www.worldometers.info/coronavirus/
 
+Daily number reports for covid-19 cases
+
 ## Usage
 
 

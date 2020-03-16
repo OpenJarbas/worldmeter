@@ -2,26 +2,24 @@ import bs4
 from bs4 import BeautifulSoup
 import requests
 import time
-from covid_reports.util import match_one, now_utc
+from worldmeter.util import match_one, now_utc
 
 
-class CovidScrapper:
+class CovidMeter:
     def __init__(self, dateformat="YMD"):
         self.base_url = "https://www.worldometers.info/coronavirus/"
         self._by_country = {}
         self._scrapped = False
-        self._html = None
-        self._soup = None
         self.date_format = dateformat
         assert dateformat in ["DMY", "YMD", "MDY", "unix"]
 
     def update(self):
         r = requests.get(self.base_url)
-        self._html = r.text
-        self._soup = BeautifulSoup(self._html, "html.parser")
+        html = r.text
+        soup = BeautifulSoup(html, "html.parser")
         self._scrapped = True
 
-        table = self._soup.find("tbody")
+        table = soup.find("tbody")
 
         if self.date_format == "DMY":
             now = now_utc().strftime("%d/%m/%Y")

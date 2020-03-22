@@ -49,29 +49,24 @@ class CovidMeter:
                     "cases_per_1M": float(data[8]),
                     "date": now
                 }
-                # HACK this is a quick and dirty way to catch more country
-                # names
-                if name == "UK":
-                    self._by_country["england"] = self._by_country[
-                        name.lower()]
-                    self._by_country["united kingdom"] = self._by_country[
-                        name.lower()]
-                if name == "USA":
-                    self._by_country["united states"] = self._by_country[
-                        name.lower()]
-                    self._by_country["united states america"] = \
-                        self._by_country[
-                        name.lower()]
-                if name == "S. Korea":
-                    self._by_country["south korea"] = self._by_country[
-                        name.lower()]
             except Exception as e:
                 pass
 
     def get_country_data(self, country):
         if not self._scrapped:
             self.update()
+
         country = country.lower().strip()
+
+        # HACK this is a quick and dirty way to match country names
+        if country in ["united kingdom", "england"]:
+            country = "uk"
+        elif country in ["united states", "united states america",
+                       "united states of america", "u.s.a."]:
+            country = "usa"
+        elif country in ["south korea", "s korea"]:
+            country = "s. korea"
+
         return self._by_country.get(country) or \
                match_one(country, self._by_country)
 

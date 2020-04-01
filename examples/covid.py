@@ -1,4 +1,5 @@
 from worldmeter.coronavirus import CovidMeter
+from pprint import pprint
 
 c = CovidMeter()
 
@@ -28,3 +29,9 @@ data = c.get_country_data("Portugal")  # country names, NOT country code
  'total_deaths': 1,
  'total_recovered': 3}
 """
+print(data)
+
+
+all_countries = c.get_all_countries()
+
+pprint(all_countries)

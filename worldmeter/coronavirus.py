@@ -52,6 +52,11 @@ class CovidMeter:
             except Exception as e:
                 pass
 
+    def get_all_countries(self):
+        if not self._scrapped:
+            self.update()
+        return self._by_country
+
     def get_country_data(self, country):
         if not self._scrapped:
             self.update()

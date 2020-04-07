@@ -76,79 +76,41 @@ class CovidMeter:
                match_one(country, self._by_country)
 
     def total_new_deaths(self):
-        total = 0
         if not self._scrapped:
             self.update()
-        for c in self._by_country:
-            total += self._by_country[c]["new_deaths"]
-        return total
+        return self._by_country["world"]["new_deaths"]
 
     def total_new_cases(self):
-        total = 0
         if not self._scrapped:
             self.update()
-        for c in self._by_country:
-            total += self._by_country[c]["new_cases"]
-        return total
+        return self._by_country["world"]["new_cases"]
 
     def total_cases(self):
-        total = 0
         if not self._scrapped:
             self.update()
-        for c in self._by_country:
-            total += self._by_country[c]["total_cases"]
-        return total
+        return self._by_country["world"]["total_cases"]
 
     def total_active_cases(self):
-        total = 0
         if not self._scrapped:
             self.update()
-        for c in self._by_country:
-            total += self._by_country[c]["active_cases"]
-        return total
+        return self._by_country["world"]["active_cases"]
 
     def total_critical_cases(self):
-        total = 0
         if not self._scrapped:
             self.update()
-        for c in self._by_country:
-            total += self._by_country[c]["critical"]
-        return total
+        return self._by_country["world"]["critical"]
 
     def total_recoveries(self):
-        total = 0
         if not self._scrapped:
             self.update()
-        for c in self._by_country:
-            total += self._by_country[c]["total_recovered"]
-        return total
+        return self._by_country["world"]["total_recovered"]
 
     def total_deaths(self):
-        total = 0
         if not self._scrapped:
             self.update()
-        for c in self._by_country:
-            total += self._by_country[c]["total_deaths"]
-        return total
+        return self._by_country["world"]["total_deaths"]
 
     def global_data(self):
-        if self.date_format == "DMY":
-            now = now_utc().strftime("%d/%m/%Y")
-        elif self.date_format == "YMD":
-            now = now_utc().strftime("%Y/%m/%d")
-        elif self.date_format == "MDY":
-            now = now_utc().strftime("%m/%d/%Y")
-        else:
-            now = time.time()
-
-        return {
-                    "country": "world",
-                    "total_cases": self.total_cases(),
-                    "new_cases": self.total_new_cases(),
-                    "total_deaths": self.total_deaths(),
-                    "new_deaths": self.total_new_deaths(),
-                    "total_recovered":self.total_recoveries(),
-                    "active_cases": self.total_active_cases(),
-                    "critical": self.total_critical_cases(),
-                    "date": now
-                }
+        if not self._scrapped:
+            self.update()
+        return self._by_country["world"]

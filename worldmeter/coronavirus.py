@@ -11,7 +11,8 @@ class CovidMeter:
         self._by_country = {}
         self._scrapped = False
         self.date_format = dateformat
-        self.last_updated = "never"
+        self.last_updated = None
+        self.last_updated_str = "never"
         assert dateformat in ["DMY", "YMD", "MDY", "unix"]
 
     def update(self):
@@ -21,19 +22,18 @@ class CovidMeter:
 
         _styles = "font-size:13px; color:#999; margin-top:5px; text-align:center"
 
-        self.last_updated = soup.find("div",
-                                      {"style": _styles}).text \
+        self.last_updated_str = soup.find("div", {"style": _styles}).text \
             .replace("Last updated: ", "")
-        dt = parser.parse(self.last_updated)
+        self.last_updated = parser.parse(self.last_updated_str)
         if self.date_format == "DMY":
-            now = dt.strftime("%d/%m/%Y")
+            dt = self.last_updated.strftime("%d/%m/%Y")
         elif self.date_format == "YMD":
-            now = dt.strftime("%Y/%m/%d")
+            dt = self.last_updated.strftime("%Y/%m/%d")
         elif self.date_format == "MDY":
-            now = dt.strftime("%m/%d/%Y")
+            dt = self.last_updated.strftime("%m/%d/%Y")
         else:
-            now = dt.timestamp()
-        now += " " + str(dt.time())
+            dt = self.last_updated.timestamp()
+        dt += " " + str(self.last_updated.time())
 
         for country_data in soup.find("tbody"):
             if not isinstance(country_data, bs4.element.Tag):
@@ -53,7 +53,7 @@ class CovidMeter:
                     "active_cases": int(data[6]),
                     "critical": int(data[7]),
                     "cases_per_1M": float(data[8]),
-                    "date": now
+                    "date": dt
                 }
             except Exception as e:
                 pass

@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='worldmeter',
-    version='0.2.0',
+    version='0.2.1',
     packages=['worldmeter'],
     url='https://github.com/OpenJarbas/worldmeter',
     license='MIT',

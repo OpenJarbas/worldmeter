@@ -1,14 +1,16 @@
 from worldmeter.coronavirus import CovidMeter
 from pprint import pprint
+from datetime import datetime
 
 c = CovidMeter()
 
-assert c.last_updated == "never"
+assert c.last_updated is None
+assert c.last_updated_str == "never"
 
 data = c.global_data()
 
-assert c.last_updated != "never"
-print(c.last_updated)
+assert isinstance(c.last_updated, datetime)
+print(c.last_updated_str)
 
 """
 {'active_cases': 109014,

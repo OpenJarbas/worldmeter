@@ -1,8 +1,8 @@
 import bs4
 from bs4 import BeautifulSoup
 import requests
-import time
-from worldmeter.util import match_one, now_utc
+from worldmeter.util import match_one
+from dateutil import parser
 
 
 class CovidMeter:
@@ -11,25 +11,31 @@ class CovidMeter:
         self._by_country = {}
         self._scrapped = False
         self.date_format = dateformat
+        self.last_updated = "never"
         assert dateformat in ["DMY", "YMD", "MDY", "unix"]
 
     def update(self):
         r = requests.get(self.base_url)
         html = r.text
         soup = BeautifulSoup(html, "html.parser")
-        self._scrapped = True
 
-        table = soup.find("tbody")
+        _styles = "font-size:13px; color:#999; margin-top:5px; text-align:center"
 
+        self.last_updated = soup.find("div",
+                                      {"style": _styles}).text \
+            .replace("Last updated: ", "")
+        dt = parser.parse(self.last_updated)
         if self.date_format == "DMY":
-            now = now_utc().strftime("%d/%m/%Y")
+            now = dt.strftime("%d/%m/%Y")
         elif self.date_format == "YMD":
-            now = now_utc().strftime("%Y/%m/%d")
+            now = dt.strftime("%Y/%m/%d")
         elif self.date_format == "MDY":
-            now = now_utc().strftime("%m/%d/%Y")
+            now = dt.strftime("%m/%d/%Y")
         else:
-            now = time.time()
-        for country_data in table:
+            now = dt.timestamp()
+        now += " " + str(dt.time())
+
+        for country_data in soup.find("tbody"):
             if not isinstance(country_data, bs4.element.Tag):
                 continue
             try:
@@ -52,6 +58,8 @@ class CovidMeter:
             except Exception as e:
                 pass
 
+        self._scrapped = True
+
     def get_all_countries(self):
         if not self._scrapped:
             self.update()
@@ -67,7 +75,7 @@ class CovidMeter:
         if country in ["united kingdom", "england"]:
             country = "uk"
         elif country in ["united states", "united states america",
-                       "united states of america", "u.s.a."]:
+                         "united states of america", "u.s.a."]:
             country = "usa"
         elif country in ["south korea", "s korea"]:
             country = "s. korea"

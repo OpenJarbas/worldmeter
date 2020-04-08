@@ -3,7 +3,13 @@ from pprint import pprint
 
 c = CovidMeter()
 
+assert c.last_updated == "never"
+
 data = c.global_data()
+
+assert c.last_updated != "never"
+print(c.last_updated)
+
 """
 {'active_cases': 109014,
  'country': 'world',
@@ -15,6 +21,7 @@ data = c.global_data()
  'total_deaths': 7006,
  'total_recovered': 79191}
 """
+
 
 data = c.get_country_data("Portugal")  # country names, NOT country code
 """
@@ -29,8 +36,6 @@ data = c.get_country_data("Portugal")  # country names, NOT country code
  'total_deaths': 1,
  'total_recovered': 3}
 """
-print(data)
-
 
 all_countries = c.get_all_countries()
 

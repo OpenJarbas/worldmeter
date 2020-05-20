@@ -1,5 +1,14 @@
 # Worldmeter
 
+
+THIS IS CURRENTLY BROKEN
+
+please check https://covid-19-apis.postman.com/ for alternatives
+
+Webscrapping might break at any time, i do not want downstream apps using this and potentially breaking at a critical time
+
+
+
 Daily number reports for covid-19 cases and other causes of death
 
 python api for worldometers.info and deathmeters.info
